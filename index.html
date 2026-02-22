@@ -276,7 +276,7 @@
         <div class="card-desc editable" contenteditable="false">Professioneel visitekaartje systeem voor jouw FiveM server. Maak en deel persoonlijke kaartjes met naam, functie, bedrijf, telefoonnummer, e-mail en eigen kleur. Ontvang kaartjes van andere spelers direct in je inbox.</div>
         <div class="card-footer">
           <div><div class="price editable" contenteditable="false"><span class="cur">€</span>24,99</div><div class="price-sub">eenmalig</div></div>
-          <div class="card-actions"><button class="details-btn" onclick="openModal(0)">Details</button><a href="#" class="buy-btn" id="buyBtn0" onclick="handleBuy(0);return false;">Kopen →</a></div>
+          <div class="card-actions"><button class="details-btn" onclick="openModal(0)">Details</button><button class="buy-btn" id="buyBtn0" onclick="handleBuy(0)">Kopen →</button></div>
         </div>
       </div>
     </div>
@@ -409,12 +409,23 @@ const PW = 'J&MAdmin1839!';
 
 // ─── STRIPE CONFIG ───────────────────────────────────────
 function handleBuy(id) {
-  const url = data[id].stripeUrl;
+  const url = data[id] && data[id].stripeUrl;
   if (url && url.trim() !== '') {
     window.open(url, '_blank');
   } else {
-    alert('Betalingslink nog niet ingesteld. Stel een Stripe link in via de bewerkmode.');
+    showToast('Geen betaallink ingesteld. Voeg een Stripe link toe via bewerkmode.');
   }
+}
+
+function showToast(msg) {
+  const existing = document.getElementById('siteToast');
+  if (existing) existing.remove();
+  const t = document.createElement('div');
+  t.id = 'siteToast';
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1e1e1e;color:#f0f0f0;border:1px solid #e8ff47;padding:12px 24px;font-family:"DM Mono",monospace;font-size:12px;z-index:9999;pointer-events:none;opacity:1;transition:opacity 0.5s;white-space:nowrap;';
+  document.body.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 500); }, 2500);
 }
 
 function setStripeUrl(id, url) {
